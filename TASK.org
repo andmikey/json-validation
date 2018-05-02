@@ -16,7 +16,35 @@
 - Exceptional cases should be handled
   - What makes an exceptional case?
 - Unexpected requests (eg. invalid URIs) should be processed according to RESTful architecture
+  - So, return status code + JSON
 - Useful but not mentioned: test suite
+** Planned approach
+- Components
+  - World: requests come from the outside world eg. using curl
+  - Service: processes requests, validates requests, interacts with database
+  - Database: stores and retrieves JSON schemas
+    - Simple layout:
+      #+BEGIN_SRC sql
+CREATE TABLE jsonschemas (
+schemaid varchar UNIQUE NOT NULL,
+json jsonb,
+PRIMARY KEY schemaid
+)
+      #+END_SRC
+      - Unique schemaid (primary key) associated with a JSON schema
+      - Use PostgreSQL jsonb data type
+      - Using PostgreSQL (rather than something simpler) allows for easily adding more fields
+- How do components communicate?
+  - World <-> Service <-> Database
+  - World <-> Service
+    - POST, GET requests
+    - No requirement for PUT, DELETE
+  - Service <-> Database
+    - INSERT, SELECT commands
+    - No requirement for UPDATE, DELETE
+- Possible issues: what if....
+  - The user wants to delete/update an existing schema?
+  - The database is down?
 ** Resources
 - [[https://stackoverflow.com/questions/671118/what-exactly-is-restful-programming/671132#671123][What is RESTful programming?]]
 - [[https://doc.akka.io/docs/akka-http/current/?language=scala][Akka HTTP]]
