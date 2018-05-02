@@ -1,0 +1,7 @@
+* JSON validation service
+** What is this?
+A RESTful service written in Scala; allows users to validate JSON documents against JSON schemas.  
+
+** Technical architecture
+
+** Building and running
