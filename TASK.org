@@ -1,0 +1,23 @@
+* JSON validation service
+** What should it do?
+*** Overview
+- REST service
+- Validating JSON documents against JSON schemas
+- Upload schemas, store them at unique URI, then validate JSON documents against URIs
+- Clean JSON before validation: remove keys for which value is null
+- Written in Scala
+*** Endpoints
+| POST /schema/SCHEMAID   | Upload a JSON Schema with unique `SCHEMAID`                               |
+| GET /schema/SCHEMAID    | Download a JSON Schema with unique `SCHEMAID`                             |
+| POST /validate/SCHEMAID | Validate a JSON document against the JSON Schema identified by `SCHEMAID` |
+*** Other requirements
+- Restarting application has no effect on previously uploaded schemas
+  - So, save to a database
+- Exceptional cases should be handled
+  - What makes an exceptional case?
+- Unexpected requests (eg. invalid URIs) should be processed according to RESTful architecture
+- Useful but not mentioned: test suite
+** Resources
+- [[https://stackoverflow.com/questions/671118/what-exactly-is-restful-programming/671132#671123][What is RESTful programming?]]
+- [[https://doc.akka.io/docs/akka-http/current/?language=scala][Akka HTTP]]
+- [[https://github.com/java-json-tools/json-schema-validator][Schema validator]]
