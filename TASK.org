@@ -26,9 +26,8 @@
     - Simple layout:
       #+BEGIN_SRC sql
 CREATE TABLE jsonschemas (
-schemaid varchar UNIQUE NOT NULL,
+schemaid varchar PRIMARY KEY,
 json jsonb,
-PRIMARY KEY schemaid
 )
       #+END_SRC
       - Unique schemaid (primary key) associated with a JSON schema
