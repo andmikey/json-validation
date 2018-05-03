@@ -35,7 +35,7 @@ class JSONSchema {
     return Json.obj();
   }
 
-  def validate(schemaid:String, json: JsValue) : JsValue = {
+  def validate(schemaid:String, json: String) : JsValue = {
     // Validate a JSON document against the named schema
 
     // Responses

@@ -9,18 +9,32 @@ class JSONServerlet extends ScalatraServlet {
     val schemaid = params("schemaid");
     val jsonSchema = request.body;
 
+    val s = new JSONSchema();
+    val resp = s.add(schemaid, jsonSchema);
+
+    // Placeholder response
+    Ok(resp);
   }
 
   get("/schema/:schemaid") {
     // Retrieve JSON schema with schemaid from database
     val schemaid = params("schemaid");
 
+    val s = new JSONSchema();
+    val resp = s.get(schemaid);
+
+    Ok(resp);
   }
 
   post("/validate/:schemaid") {
     // Validate JSON document against schemaid from database
     val schemaid = params("schemaid");
     val jsonDocument = request.body;
+
+    val s = new JSONSchema();
+    val resp = s.validate(schemaid, jsonDocument);
+
+    Ok(resp);
   }
 
 }
