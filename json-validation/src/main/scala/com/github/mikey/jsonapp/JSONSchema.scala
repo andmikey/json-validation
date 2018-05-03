@@ -13,7 +13,7 @@ class JSONSchema {
       "status" -> "error", "message" -> "Invalid JSON"));
     val name_clash = (Json.obj("action" -> "uploadSchema", "id" -> "config-schema",
       "status" -> "error", "message" -> "Schema with this name already exists"));
-    
+
     // Placeholder
     return invalid_upload;
   }
