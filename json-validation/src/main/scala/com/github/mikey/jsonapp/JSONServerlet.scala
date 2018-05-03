@@ -2,24 +2,25 @@ package com.github.mikey.jsonapp
 
 import org.scalatra._
 
-// MongoDb-specific imports
-import com.mongodb.casbah.Imports._
-
-class JSONServerlet(mongoColl: MongoCollection) extends ScalatraServlet {
+class JSONServerlet extends ScalatraServlet {
 
   post("/schema/:schemaid") {
+    // Add JSON Schema with schemaid to database
     val schemaid = params("schemaid");
-    <p> POST request for {schemaid} </p>
+    val jsonSchema = request.body;
+
   }
 
   get("/schema/:schemaid") {
+    // Retrieve JSON schema with schemaid from database
     val schemaid = params("schemaid");
-    <p> GET request for {schemaid} </p>
+
   }
 
   post("/validate/:schemaid") {
+    // Validate JSON document against schemaid from database
     val schemaid = params("schemaid");
-    <p> POST request for {schemaid} </p>
+    val jsonDocument = request.body;
   }
 
 }

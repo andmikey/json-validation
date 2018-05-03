@@ -2,10 +2,7 @@ package com.github.mikey.jsonapp
 
 import play.api.libs.json._
 
-// MongoDB imports
-import com.mongodb.casbah.Imports._
-
-class JSONSchema(mongoColl: MongoCollection) {
+class JSONSchema {
   // Class to hold instances of JSON schemas
 
   def add(schemaid: String, schema: String): JsValue = {
@@ -29,17 +26,6 @@ class JSONSchema(mongoColl: MongoCollection) {
         case e: Exception => return invalid_upload;
           null
       }
-
-    // Save key:value to database
-    try {
-      val newObj = MongoDBObject(schema -> json_schema);
-      mongoColl += newObj;
-    }
-    catch {
-      // Something went wrong with saving to database
-      // TODO more fine-grained return code depending on db error
-      case e: Exception => return db_issue;
-    }
 
     return successful_upload;
   }

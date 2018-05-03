@@ -16,10 +16,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3" % "runtime",
   "org.eclipse.jetty" % "jetty-webapp" % "9.4.9.v20180320" % "container",
   "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided",
-  "com.typesafe.play" % "play-json_2.11" % "2.4.6",
-  "org.mongodb" %% "casbah" % "3.1.1",
-  "org.json4s" %% "json4s-jackson" % "3.5.2",
-  "org.json4s" %% "json4s-mongo" % "3.5.2"
+  "com.typesafe.play" % "play-json_2.11" % "2.4.6"
 )
 
 enablePlugins(SbtTwirl)
