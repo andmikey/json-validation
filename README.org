@@ -5,3 +5,11 @@ A RESTful service written in Scala; allows users to validate JSON documents agai
 ** Technical architecture
 
 ** Building and running
+#+BEGIN_SRC sh
+$ cd json-validation
+$ sbt
+> jetty:start
+> browse
+#+END_SRC
+
+The app should be running on http://localhost:8080/. 

@@ -47,4 +47,5 @@ json jsonb,
 ** Resources
 - [[https://stackoverflow.com/questions/671118/what-exactly-is-restful-programming/671132#671123][What is RESTful programming?]]
 - [[https://doc.akka.io/docs/akka-http/current/?language=scala][Akka HTTP]]
+- [[http://scalatra.org/getting-started/first-project.html][Scalatra]]
 - [[https://github.com/java-json-tools/json-schema-validator][Schema validator]]
