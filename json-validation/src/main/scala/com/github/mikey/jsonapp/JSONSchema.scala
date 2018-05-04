@@ -76,6 +76,8 @@ class JSONSchema {
   }
 
   def queryDB(schemaid: String) : String = {
+    // Query the database for the contents associated with schemaid
+    // Return the contents
     classOf[org.postgresql.Driver]
 
     val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=jsonapp"
@@ -83,7 +85,6 @@ class JSONSchema {
 
     try {
       val stm = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
-
       val rs = stm.executeQuery(s"SELECT * from Schemas where schemaid = '$schemaid'")
 
       return rs.getString("contents");
@@ -93,5 +94,21 @@ class JSONSchema {
     }
   }
 
+  def insertDB(schemaid: String, schemaContents: String) : Integer = {
+    // Insert into database JSON schema of name schemaid with contents schemaContents
+    // Return the number of rows changed
+    classOf[org.postgresql.Driver]
+
+    val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=jsonapp"
+    val conn = DriverManager.getConnection(con_str)
+
+    try {
+      val stm = conn.createStatement()
+      val c = stm.executeUpdate(s"INSERT INTO schemas VALUES ('$schemaid', '$schemaContents')");
+      return c;
+    } finally {
+      conn.close()
+    }
+  }
 }
 
