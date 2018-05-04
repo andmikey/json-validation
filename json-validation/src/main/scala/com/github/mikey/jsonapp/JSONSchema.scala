@@ -9,19 +9,24 @@ import org.json4s.jackson.JsonMethods._
 import java.sql.{Connection, DriverManager, ResultSet}
 
 
-class JSONSchema {
+class JSONSchema(schemaid : String) {
   // Class to hold instances of JSON schemas
+
+  val successful_upload = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
+    "status" -> "success"));
+  val invalid_upload = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
+    "status" -> "error", "message" -> "Invalid JSON"));
+  val db_save_issue = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
+    "status" -> "error", "message" -> "Cannot save to database; perhaps the item already exists?"));
+  val db_load_issue = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
+    "status" -> "error", "message" -> "Cannot fetch from database; perhaps the item doesn't exist?"));
+  val successful_validation = (Json.obj("action" -> "validateDocument", "id" -> schemaid,
+    "status" -> "success"));
+  val invalid_validation = (Json.obj("action" -> "validateDocument", "id" -> schemaid,
+    "status" -> "error", "message" -> "Could not validate JSON document against given schema"));
 
   def add(schemaid: String, schema: String): JsValue = {
     // Add a schema to the database if not already in database
-
-    // Responses
-    val successful_upload = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
-      "status" -> "success"));
-    val invalid_upload = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
-      "status" -> "error", "message" -> "Invalid JSON"));
-    val db_issue = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
-      "status" -> "error", "message" -> "Cannot save to database"));
 
     // Convert schema to JSON
     val json_schema: JsValue =
@@ -39,16 +44,23 @@ class JSONSchema {
       this.insertDB(schemaid, schema);
     }
     catch {
-      case e: Exception => return db_issue;
+      case e: Exception => return db_save_issue;
         System.out.println(e);
         null
     }
     return successful_upload;
   }
 
-  def get(schemaid: String): String = {
+  def get(schemaid: String): JsValue = {
     // Retrieve a schema of specified schemaid from database
-    return this.queryDB(schemaid);
+    try {
+      return Json.parse(this.queryDB(schemaid));
+    }
+    catch {
+      case e: Exception => return db_load_issue;
+        System.out.println(e);
+        null
+    }
   }
 
   def withoutNull(json: JsValue): JsValue = json match {
@@ -64,14 +76,8 @@ class JSONSchema {
   def validate(schemaid: String, json: String) : JsValue = {
     // Validate a JSON document against the named schema
 
-    // Responses
-    val successful_validation = (Json.obj("action" -> "validateDocument", "id" -> schemaid,
-      "status" -> "success"));
-    val invalid_validation = (Json.obj("action" -> "validateDocument", "id" -> schemaid,
-      "status" -> "error", "message" -> "Could not validate JSON document against given schema"));
-
     // Parse schema, supplied json
-    val schema: JsonNode = asJsonNode(parse(this.get(schemaid)));
+    val schema: JsonNode = asJsonNode(parse(Json.stringify(this.get(schemaid))));
     val json_parsed: JsonNode = asJsonNode(parse(json));
 
     val validator = JsonSchemaFactory.byDefault().getValidator;
