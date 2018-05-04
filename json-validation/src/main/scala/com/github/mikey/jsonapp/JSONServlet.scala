@@ -2,7 +2,7 @@ package com.github.mikey.jsonapp
 
 import org.scalatra._
 
-class JSONServerlet extends ScalatraServlet {
+class JSONServlet extends ScalatraServlet {
 
   post("/schema/:schemaid") {
     // Add JSON Schema with schemaid to database
