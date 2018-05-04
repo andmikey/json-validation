@@ -3,6 +3,22 @@
 A RESTful service written in Scala; allows users to validate JSON documents against JSON schemas.  
 
 ** Technical architecture
+The key part of the app is a Scalatra server. This receives POST and GET requests and processes them according to the following endpoints:
+| Route                   | Purpose                                                                   |
+|-------------------------+---------------------------------------------------------------------------|
+| POST /schema/SCHEMAID   | Upload a JSON Schema with unique `SCHEMAID`                               |
+| GET /schema/SCHEMAID    | Download a JSON Schema with unique `SCHEMAID`                             |
+| POST /validate/SCHEMAID | Validate a JSON document against the JSON Schema identified by `SCHEMAID` |
+
+The `JSONServlet` class handles incoming requests on the above routes, and passes them to the `JSONSchema` object.
+
+The `JSONSchema` object has the following methods:
+
+| Method   | Purpose                                              |
+|----------+------------------------------------------------------|
+| add      | Add a JSON Schema to the database if it is valid     |
+| get      | Retrieve JSON Schema  from the database if it exists |
+| validate | Validate a JSON Document against a JSON Schema       |
 
 ** Building and running
 #+BEGIN_SRC sh
