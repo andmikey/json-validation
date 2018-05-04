@@ -21,6 +21,12 @@ The `JSONSchema` object has the following methods:
 | validate | Validate a JSON Document against a JSON Schema       |
 
 ** Building and running
+You'll need to set up the database. This should be a PostgreSQL database serving on the standard port (5432). Create a database jsonapp, then create the table which will store JSON schemas:
+#+BEGIN_SRC sql
+CREATE TABLE jsonschemas(schemaid varchar PRIMARY KEY, json varchar);
+#+END_SRC
+
+To run the app:
 #+BEGIN_SRC sh
 $ cd json-validation
 $ sbt
