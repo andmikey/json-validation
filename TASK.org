@@ -44,6 +44,27 @@ json jsonb,
 - Possible issues: what if....
   - The user wants to delete/update an existing schema?
   - The database is down?
+*** Setting up database
+This is Fedora-specific, based on https://developer.fedoraproject.org/tech/database/postgresql/about.html
+#+BEGIN_SRC sh
+# Install 
+$ sudo dnf -y install postgresql postgresql-server
+# Start service
+$ sudo systemctl start postgresql
+# Create a user jsonapp with associated database
+$ sudo su - postgres
+$ createuser jsonapp -P
+$ createdb jsonapp --owner jsonapp
+# Add permissions
+$ emacs ~/data/pg_hba.conf
+# Add line:     
+# local   all             jsonapp                                 md5
+# Connect to the database
+$ psql -d jsonapp
+# Create the table
+$ CREATE TABLE jsonschemas (schemaid varchar PRIMARY KEY, json jsonb);
+#+END_SRC
+
 ** Resources
 - [[https://stackoverflow.com/questions/671118/what-exactly-is-restful-programming/671132#671123][What is RESTful programming?]]
 - [[https://doc.akka.io/docs/akka-http/current/?language=scala][Akka HTTP]]
