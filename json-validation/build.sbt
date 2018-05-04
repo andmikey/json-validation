@@ -20,7 +20,8 @@ libraryDependencies ++= Seq(
   "com.github.java-json-tools" % "json-schema-validator" % "2.2.8",
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.4.0",
   "org.json4s" %% "json4s-jackson" % "3.6.0-M3",
-  "org.json4s" %% "json4s-native" % "3.6.0-M3"
+  "org.json4s" %% "json4s-native" % "3.6.0-M3",
+  "org.postgresql" % "postgresql" % "9.3-1102-jdbc41"
 )
 
 enablePlugins(SbtTwirl)

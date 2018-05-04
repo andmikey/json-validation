@@ -6,6 +6,8 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory
 import com.fasterxml.jackson.databind.JsonNode
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import java.sql.{Connection, DriverManager, ResultSet}
+
 
 class JSONSchema {
   // Class to hold instances of JSON schemas
@@ -72,4 +74,24 @@ class JSONSchema {
 
     return invalid_validation;
   }
+
+  def queryDB(schemaid: String) : String = {
+    classOf[org.postgresql.Driver]
+
+    val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=jsonapp"
+    val conn = DriverManager.getConnection(con_str)
+
+    try {
+      val stm = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
+
+      val rs = stm.executeQuery(s"SELECT * from Schemas where schemaid = '$schemaid'")
+
+      return rs.getString("contents");
+
+    } finally {
+      conn.close()
+    }
+  }
+
 }
+
