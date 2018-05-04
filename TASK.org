@@ -51,18 +51,13 @@ This is Fedora-specific, based on https://developer.fedoraproject.org/tech/datab
 $ sudo dnf -y install postgresql postgresql-server
 # Start service
 $ sudo systemctl start postgresql
-# Create a user jsonapp with associated database
+# Create a database
 $ sudo su - postgres
-$ createuser jsonapp -P
-$ createdb jsonapp --owner jsonapp
-# Add permissions
-$ emacs ~/data/pg_hba.conf
-# Add line:     
-# local   all             jsonapp                                 md5
+$ createdb jsonapp --owner postgres
 # Connect to the database
 $ psql -d jsonapp
 # Create the table
-$ CREATE TABLE jsonschemas (schemaid varchar PRIMARY KEY, json jsonb);
+$ CREATE TABLE jsonschemas (schemaid varchar PRIMARY KEY, json varchar);
 #+END_SRC
 
 ** Resources

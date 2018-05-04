@@ -40,6 +40,7 @@ class JSONSchema {
     }
     catch {
       case e: Exception => return db_issue;
+        System.out.println(e);
         null
     }
     return successful_upload;
@@ -87,14 +88,15 @@ class JSONSchema {
     // Query the database for the contents associated with schemaid
     // Return the contents
 
-    val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=jsonapp"
+    val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=postgres"
     val conn = DriverManager.getConnection(con_str)
 
     try {
       val stm = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
       val rs = stm.executeQuery(s"SELECT * from jsonschemas where schemaid = '$schemaid'")
-
-      return rs.getString("contents");
+      // Move the pointer one along to get first row of results
+      rs.next()
+      return rs.getString("json");
 
     } finally {
       conn.close()
@@ -105,7 +107,7 @@ class JSONSchema {
     // Insert into database JSON schema of name schemaid with contents schemaContents
     // Return the number of rows changed
 
-    val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=jsonapp"
+    val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=postgres"
     val conn = DriverManager.getConnection(con_str)
 
     try {
