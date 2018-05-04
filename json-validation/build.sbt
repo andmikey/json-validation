@@ -19,8 +19,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" % "play-json_2.12" % "2.6.9",
   // "com.eclipsesource"  %% "play-json-schema-validator" % "0.9.4"
   "com.github.java-json-tools" % "json-schema-validator" % "2.2.8",
-   "com.fasterxml.jackson.core" % "jackson-databind" % "2.4.0"
-
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.4.0",
+  "org.json4s" %% "json4s-jackson" % "3.6.0-M3",
+  "org.json4s" %% "json4s-native" % "3.6.0-M3"
 )
 
 enablePlugins(SbtTwirl)
