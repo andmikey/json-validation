@@ -85,7 +85,7 @@ class JSONSchema {
 
     try {
       val stm = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
-      val rs = stm.executeQuery(s"SELECT * from Schemas where schemaid = '$schemaid'")
+      val rs = stm.executeQuery(s"SELECT * from jsonschemas where schemaid = '$schemaid'")
 
       return rs.getString("contents");
 
@@ -104,7 +104,7 @@ class JSONSchema {
 
     try {
       val stm = conn.createStatement()
-      val c = stm.executeUpdate(s"INSERT INTO schemas VALUES ('$schemaid', '$schemaContents')");
+      val c = stm.executeUpdate(s"INSERT INTO jsonschemas VALUES ('$schemaid', '$schemaContents')");
       return c;
     } finally {
       conn.close()
