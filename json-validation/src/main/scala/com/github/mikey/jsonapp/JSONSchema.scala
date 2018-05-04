@@ -76,9 +76,11 @@ class JSONSchema(schemaid : String) {
   def validate(schemaid: String, json: String) : JsValue = {
     // Validate a JSON document against the named schema
 
+    // Clean json
+    val json_clean = Json.stringify(withoutNull(Json.parse(json)));
     // Parse schema, supplied json
     val schema: JsonNode = asJsonNode(parse(Json.stringify(this.get(schemaid))));
-    val json_parsed: JsonNode = asJsonNode(parse(json));
+    val json_parsed: JsonNode = asJsonNode(parse(json_clean));
 
     val validator = JsonSchemaFactory.byDefault().getValidator;
     val processingReport = validator.validate(schema, json_parsed);
