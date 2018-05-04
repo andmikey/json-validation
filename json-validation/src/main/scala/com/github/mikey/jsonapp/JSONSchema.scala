@@ -34,12 +34,20 @@ class JSONSchema {
           null
       }
 
+    // Save to database
+    try {
+      this.insertDB(schemaid, schema);
+    }
+    catch {
+      case e: Exception => return db_issue;
+        null
+    }
     return successful_upload;
   }
 
   def get(schemaid: String): String = {
     // Retrieve a schema of specified schemaid from database
-    return "";
+    return this.queryDB(schemaid);
   }
 
   def withoutNull(json: JsValue): JsValue = json match {
@@ -78,7 +86,6 @@ class JSONSchema {
   def queryDB(schemaid: String) : String = {
     // Query the database for the contents associated with schemaid
     // Return the contents
-    classOf[org.postgresql.Driver]
 
     val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=jsonapp"
     val conn = DriverManager.getConnection(con_str)
@@ -97,7 +104,6 @@ class JSONSchema {
   def insertDB(schemaid: String, schemaContents: String) : Integer = {
     // Insert into database JSON schema of name schemaid with contents schemaContents
     // Return the number of rows changed
-    classOf[org.postgresql.Driver]
 
     val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=jsonapp"
     val conn = DriverManager.getConnection(con_str)
