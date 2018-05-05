@@ -60,6 +60,17 @@ $ psql -d jsonapp
 $ CREATE TABLE jsonschemas (schemaid varchar PRIMARY KEY, json varchar);
 #+END_SRC
 
+** TODOs
+- HTTP responses:
+  - OK: 200
+    - Schema successfuly retrieved
+    - Document successfuly validated agaisnt schema
+  - Created: 201
+    - Adding schema to database
+  - Not found: 404
+    - Could not retrieve schema: does not exist
+  - Internal server error: 500
+    - Document could not be validated against schema
 ** Resources
 - [[https://stackoverflow.com/questions/671118/what-exactly-is-restful-programming/671132#671123][What is RESTful programming?]]
 - [[https://doc.akka.io/docs/akka-http/current/?language=scala][Akka HTTP]]
