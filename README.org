@@ -12,14 +12,6 @@ The key part of the app is a Scalatra server. This receives POST and GET request
 
 The `JSONServlet` class handles incoming requests on the above routes, and passes them to the `JSONSchema` object.
 
-The `JSONSchema` object has the following methods:
-
-| Method   | Purpose                                              |
-|----------+------------------------------------------------------|
-| add      | Add a JSON Schema to the database if it is valid     |
-| get      | Retrieve JSON Schema  from the database if it exists |
-| validate | Validate a JSON Document against a JSON Schema       |
-
 The following respones are possible on a GET/POST request: 
 | Route                   | Status code | Reason                                         |
 |-------------------------+-------------+------------------------------------------------|
@@ -30,6 +22,15 @@ The following respones are possible on a GET/POST request:
 | POST /validate/SCHEMAID |         200 | Document successfully validated against schema |
 | POST /validate/SCHEMAID |         500 | Document could not be validated against schema |
 | Any other route         |         404 | Route not found                                |
+
+
+The `JSONSchema` object has the following publicly-accessible methods:
+
+| Method   | Purpose                                              |
+|----------+------------------------------------------------------|
+| add      | Add a JSON Schema to the database if it is valid     |
+| get      | Retrieve JSON Schema  from the database if it exists |
+| validate | Validate a JSON Document against a JSON Schema       |
 
 ** Building and running
 You'll need to set up the database. This should be a PostgreSQL database serving on the standard port (5432). Create a database jsonapp, then create the table which will store JSON schemas:

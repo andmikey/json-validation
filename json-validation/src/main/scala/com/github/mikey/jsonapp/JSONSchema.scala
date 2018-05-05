@@ -63,7 +63,7 @@ class JSONSchema(schemaid : String) {
     }
   }
 
-  def withoutNull(json: JsValue): JsValue = json match {
+  private[this] def withoutNull(json: JsValue): JsValue = json match {
     // https://gist.github.com/d6y/eda9d968e78943e672ce
     case JsObject(fields) =>
       JsObject(fields.flatMap {
@@ -93,7 +93,7 @@ class JSONSchema(schemaid : String) {
     return (invalid_validation, 500);
   }
 
-  def queryDB(schemaid: String) : String = {
+  private[this] def queryDB(schemaid: String) : String = {
     // Query the database for the contents associated with schemaid
     // Return the contents
 
@@ -112,7 +112,7 @@ class JSONSchema(schemaid : String) {
     }
   }
 
-  def insertDB(schemaid: String, schemaContents: String) : Integer = {
+  private[this] def insertDB(schemaid: String, schemaContents: String) : Integer = {
     // Insert into database JSON schema of name schemaid with contents schemaContents
     // Return the number of rows changed
 
