@@ -33,7 +33,7 @@ The `JSONSchema` object has the following publicly-accessible methods:
 | validate | Validate a JSON Document against a JSON Schema       |
 
 ** Building and running
-To set up the database:
+The database need to be a PostgreSQL instance running on port 5432, as standard. To set up the required database and tables:
 #+BEGIN_SRC sh
 $ psql -U postgres -c "CREATE DATABASE jsonapp WITH OWNER = postgres;"
 $ psql -U postgres -d jsonapp -c "CREATE TABLE jsonschemas(schemaid varchar PRIMARY KEY, json varchar);"
