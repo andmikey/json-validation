@@ -20,6 +20,17 @@ The `JSONSchema` object has the following methods:
 | get      | Retrieve JSON Schema  from the database if it exists |
 | validate | Validate a JSON Document against a JSON Schema       |
 
+The following respones are possible on a GET/POST request: 
+| Route                   | Status code | Reason                                         |
+|-------------------------+-------------+------------------------------------------------|
+| POST /schema/SCHEMAID   |         201 | Schema successfully saved to database          |
+| POST /schema/SCHEMAID   |         500 | Schema could not be saved to database          |
+| GET /schema/SCHEMAID    |         200 | Schema successfully retrieved                  |
+| GET /schema/SCHEMAID    |         404 | Schema could not be retrieved                  |
+| POST /validate/SCHEMAID |         200 | Document successfully validated against schema |
+| POST /validate/SCHEMAID |         500 | Document could not be validated against schema |
+| Any other route         |         404 | Route not found                                |
+
 ** Building and running
 You'll need to set up the database. This should be a PostgreSQL database serving on the standard port (5432). Create a database jsonapp, then create the table which will store JSON schemas:
 #+BEGIN_SRC sql
@@ -31,7 +42,6 @@ To run the app:
 $ cd json-validation
 $ sbt
 > jetty:start
-> browse
 #+END_SRC
 
 The app should be running on http://localhost:8080/. 
