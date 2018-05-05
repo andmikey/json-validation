@@ -10,7 +10,7 @@ class JSONServlet extends ScalatraServlet {
     val jsonSchema = request.body;
 
     val s = new JSONSchema(schemaid);
-    val resp = s.add(schemaid, jsonSchema);
+    val (resp, code) = s.add(schemaid, jsonSchema);
 
     // Placeholder response
     Ok(resp);
@@ -21,7 +21,7 @@ class JSONServlet extends ScalatraServlet {
     val schemaid = params("schemaid");
 
     val s = new JSONSchema(schemaid);
-    val resp = s.get(schemaid);
+    val (resp, code) = s.get(schemaid);
 
     Ok(resp);
   }
@@ -32,7 +32,7 @@ class JSONServlet extends ScalatraServlet {
     val jsonDocument = request.body;
 
     val s = new JSONSchema(schemaid);
-    val resp = s.validate(schemaid, jsonDocument);
+    val (resp, code) = s.validate(schemaid, jsonDocument);
 
     Ok(resp);
   }
