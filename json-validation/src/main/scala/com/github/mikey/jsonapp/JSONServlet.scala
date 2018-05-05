@@ -1,8 +1,22 @@
 package com.github.mikey.jsonapp
 
 import org.scalatra._
+import play.api.libs.json._
 
 class JSONServlet extends ScalatraServlet {
+
+  val not_found_error = (Json.obj("action" -> "unknown", "status" -> "error",
+    "message" -> "Could not find specified route."));
+
+  // These are at the top because Scalatra reads routes from the bottom up
+  // Respond to anything other than the expected request with 404 Not Found
+  post("*") {
+    NotFound(not_found_error)
+  }
+
+  get("*") {
+    NotFound(not_found_error)
+  }
 
   post("/schema/:schemaid") {
     // Add JSON Schema with schemaid to database
