@@ -11,6 +11,8 @@ class JSONServletTests extends ScalatraFunSuite with BeforeAndAfterAll {
 
   // Set up database with test data
   override def beforeAll() {
+    // The super class needs to be called first
+    super.beforeAll()
     val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=postgres"
     val conn = DriverManager.getConnection(con_str)
 
@@ -24,6 +26,7 @@ class JSONServletTests extends ScalatraFunSuite with BeforeAndAfterAll {
 
   // Remove test data
   override def afterAll() {
+    super.afterAll()
     val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=postgres"
     val conn = DriverManager.getConnection(con_str)
 
@@ -35,14 +38,39 @@ class JSONServletTests extends ScalatraFunSuite with BeforeAndAfterAll {
     }
   }
 
-  // test("GET / on JSONServlet should return status 200") {
-  //   get("/") {
-  //     status should equal (200)
-  //   }
+  test("GET /schema/config-schema should return 200") {
+    get("/schema/config-schema") {
+      status should equal (200)
+    }
+  }
+
+  test("GET /schema/foobarbaz should return 404") {
+    get("/schema/foobarbaz") {
+      status should equal (404)
+    }
+  }
+
+  test("POST valid json to /schema/config-schema should return 200") {
+    post("/validate/config-schema", valid_json_document, Map("Content-Type" -> "application/json")) {
+      status should equal (200)
+    }
+  }
+
+  test("POST invalid json to /schema/config-schema should return 500") {
+    post("/validate/config-schema", invalid_json_document, Map("Content-Type" -> "application/json")) {
+      status should equal (500)
+    }
+  }
+
+  test("POST valid json with null to /schema/config-schema should return 200") {
+    post("/validate/config-schema", valid_with_null_json_document, Map("Content-Type" -> "application/json")) {
+      status should equal (200)
+    }
+  }
 
   val dir = System.getProperty("user.dir")
   val config_schema = Source.fromFile(dir + "/files/config-schema.json").getLines.mkString
   val valid_json_document = Source.fromFile(dir + "/files/config.json").getLines.mkString
   val valid_with_null_json_document = Source.fromFile(dir + "/files/config-no-null.json").getLines.mkString
-  val invalid_json_docuemnt = Source.fromFile(dir + "/files/invalid.json").getLines.mkString
+  val invalid_json_document = Source.fromFile(dir + "/files/invalid.json").getLines.mkString
 }
