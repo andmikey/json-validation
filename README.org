@@ -47,3 +47,8 @@ $ sbt
 #+END_SRC
 
 The app should be running on http://localhost:8080/. 
+
+To run tests:
+#+BEGIN_SRC sh
+
+#+END_SRC
