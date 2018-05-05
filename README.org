@@ -50,5 +50,5 @@ The app should be running on http://localhost:8080/.
 
 To run tests:
 #+BEGIN_SRC sh
-
+$ sbt test
 #+END_SRC
