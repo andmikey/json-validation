@@ -61,17 +61,26 @@ $ CREATE TABLE jsonschemas (schemaid varchar PRIMARY KEY, json varchar);
 #+END_SRC
 
 ** TODOs
-- HTTP responses:
+- [X] HTTP responses:
   - OK: 200
-    - Schema successfuly retrieved
-    - Document successfuly validated against schema
+    - [X] Schema successfuly retrieved
+    - [X] Document successfuly validated against schema
   - Created: 201
-    - Schema succesfully saved to database
+    - [X] Schema succesfully saved to database
   - Not found: 404
-    - Could not retrieve schema: does not exist
+    - [X] Could not retrieve schema: does not exist
   - Internal server error: 500
-    - Document could not be validated against schema
-    - Schema could not be saved to database
+    - [X] Document could not be validated against schema
+    - [X] Schema could not be saved to database
+- [ ] Tests:
+  - [ ] Valid schema upload
+  - [ ] Invalid schema upload
+    - [ ] JSON not valid
+    - [ ] Already exists in database
+  - [ ] Successful validation
+  - [ ] Unsuccessful validation
+  - [ ] Successful retrieval
+  - [ ] Unsuccessful retrieval
 ** Resources
 - [[https://stackoverflow.com/questions/671118/what-exactly-is-restful-programming/671132#671123][What is RESTful programming?]]
 - [[https://doc.akka.io/docs/akka-http/current/?language=scala][Akka HTTP]]
