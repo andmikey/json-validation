@@ -12,8 +12,13 @@ class JSONServlet extends ScalatraServlet {
     val s = new JSONSchema(schemaid);
     val (resp, code) = s.add(schemaid, jsonSchema);
 
-    // Placeholder response
-    Ok(resp);
+    // 201 or 500?
+    if (code == 201) {
+      Ok(resp);
+    }
+    else {
+      InternalServerError(resp);
+    }
   }
 
   get("/schema/:schemaid") {
@@ -23,7 +28,13 @@ class JSONServlet extends ScalatraServlet {
     val s = new JSONSchema(schemaid);
     val (resp, code) = s.get(schemaid);
 
-    Ok(resp);
+    // 200 or 404?
+    if (code == 200) {
+      Ok(resp);
+    }
+    else {
+      NotFound(resp);
+    }
   }
 
   post("/validate/:schemaid") {
@@ -34,7 +45,13 @@ class JSONServlet extends ScalatraServlet {
     val s = new JSONSchema(schemaid);
     val (resp, code) = s.validate(schemaid, jsonDocument);
 
-    Ok(resp);
+    // 200 or 500?
+    if (code == 200) {
+      Ok(resp)
+    }
+    else {
+      InternalServerError(resp)
+    }
   }
 
 }
