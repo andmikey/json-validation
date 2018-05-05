@@ -25,7 +25,7 @@ class JSONSchema(schemaid : String) {
   val invalid_validation = (Json.obj("action" -> "validateDocument", "id" -> schemaid,
     "status" -> "error", "message" -> "Could not validate JSON document against given schema"));
 
-  def add(schemaid: String, schema: String): JsValue = {
+  def add(schemaid: String, schema: String): (JsValue, Int) = {
     // Add a schema to the database if not already in database
 
     // Convert schema to JSON
@@ -35,7 +35,7 @@ class JSONSchema(schemaid : String) {
       }
       catch {
         // Cannot parse - invalid JSON, return invalid response
-        case e: Exception => return invalid_upload;
+        case e: Exception => return (invalid_upload, 500);
           null
       }
 
@@ -44,26 +44,26 @@ class JSONSchema(schemaid : String) {
       this.insertDB(schemaid, schema);
     }
     catch {
-      case e: Exception => return db_save_issue;
+      case e: Exception => return (db_save_issue, 500);
         System.out.println(e);
         null
     }
-    return successful_upload;
+    return (successful_upload, 201);
   }
 
-  def get(schemaid: String): JsValue = {
+  def get(schemaid: String): (JsValue, Int) = {
     // Retrieve a schema of specified schemaid from database
     try {
-      return Json.parse(this.queryDB(schemaid));
+      return (Json.parse(this.queryDB(schemaid)), 200);
     }
     catch {
-      case e: Exception => return db_load_issue;
+      case e: Exception => return (db_load_issue, 404);
         System.out.println(e);
         null
     }
   }
 
-  def withoutNull(json: JsValue): JsValue = json match {
+  private[this] def withoutNull(json: JsValue): JsValue = json match {
     // https://gist.github.com/d6y/eda9d968e78943e672ce
     case JsObject(fields) =>
       JsObject(fields.flatMap {
@@ -73,26 +73,27 @@ class JSONSchema(schemaid : String) {
     case other => other
   }
 
-  def validate(schemaid: String, json: String) : JsValue = {
+  def validate(schemaid: String, json: String) : (JsValue, Int) = {
     // Validate a JSON document against the named schema
 
     // Clean json
     val json_clean = Json.stringify(withoutNull(Json.parse(json)));
     // Parse schema, supplied json
-    val schema: JsonNode = asJsonNode(parse(Json.stringify(this.get(schemaid))));
+    val (schemaContents, _) = this.get(schemaid);
+    val schema: JsonNode = asJsonNode(parse(Json.stringify(schemaContents)));
     val json_parsed: JsonNode = asJsonNode(parse(json_clean));
 
     val validator = JsonSchemaFactory.byDefault().getValidator;
     val processingReport = validator.validate(schema, json_parsed);
 
     if (processingReport.isSuccess) {
-      return successful_validation;
+      return (successful_validation, 200);
     }
 
-    return invalid_validation;
+    return (invalid_validation, 500);
   }
 
-  def queryDB(schemaid: String) : String = {
+  private[this] def queryDB(schemaid: String) : String = {
     // Query the database for the contents associated with schemaid
     // Return the contents
 
@@ -111,7 +112,7 @@ class JSONSchema(schemaid : String) {
     }
   }
 
-  def insertDB(schemaid: String, schemaContents: String) : Integer = {
+  private[this] def insertDB(schemaid: String, schemaContents: String) : Integer = {
     // Insert into database JSON schema of name schemaid with contents schemaContents
     // Return the number of rows changed
 
