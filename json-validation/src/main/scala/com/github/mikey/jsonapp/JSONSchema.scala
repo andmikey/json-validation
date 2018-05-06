@@ -6,6 +6,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory
 import com.fasterxml.jackson.databind.JsonNode
 // import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.{Json => JJson, _}
 import java.sql.{Connection, DriverManager, ResultSet}
 import argonaut.{Json => AJson, _}
 import Argonaut._
@@ -64,28 +65,34 @@ class JSONSchema(schemaid : String) {
     }
   }
 
-  def removeNulls(js: String): String = {
-    val prettyParams = PrettyParams.spaces2.copy(preserveOrder = true, dropNullKeys = true)
-    return js.asJson.pretty(prettyParams);
-  }
-
-  def removeNull(json: JsValue): JsValue =  {
-    return Json.parse(removeNulls(Json.stringify(json)));
+  def removeNulls(js: String): JsValue = {
+    val prettyParams = PrettyParams.spaces4.copy(preserveOrder = true, dropNullKeys = true)
+    val asJs = js.asJson;
+    val prettified = js.asJson.pretty(prettyParams);
+    return Json.parse(prettified);
   }
 
   def validate(schemaid: String, json: String) : (JsValue, Int) = {
     // Validate a JSON document against the named schema
-
+    System.out.println("Given JSON: " + json)
     // Clean json
-    val json_clean = Json.stringify(removeNull(Json.parse(json)));
+    val no_nulls = removeNulls(json);
+    System.out.println(no_nulls);
+    val json_clean = Json.stringify(no_nulls);
+
     // Parse schema, supplied json
     val (schemaContents, _) = this.get(schemaid);
     val schema: JsonNode = asJsonNode(parse(Json.stringify(schemaContents)));
     val json_parsed: JsonNode = asJsonNode(parse(json_clean));
 
+    System.out.println("Parsed json: " + json_parsed);
+    System.out.println("Schema: " + schema);
+
+    System.out.println(json_parsed.getClass);
     val validator = JsonSchemaFactory.byDefault().getValidator;
     val processingReport = validator.validate(schema, json_parsed);
-    System.out.println("Processing report for " + json);
+    System.out.println("Processing report: " + json);
+
     System.out.println(processingReport)
 
     if (processingReport.isSuccess) {
@@ -107,7 +114,9 @@ class JSONSchema(schemaid : String) {
       val rs = stm.executeQuery(s"SELECT * from jsonschemas where schemaid = '$schemaid'")
       // Move the pointer one along to get first row of results
       rs.next()
-      return rs.getString("json");
+      val result = rs.getString("json");
+      System.out.println("Got schema from database" );
+      return result;
 
     } finally {
       conn.close()
