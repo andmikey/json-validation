@@ -22,7 +22,8 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-jackson" % "3.6.0-M3",
   "org.json4s" %% "json4s-native" % "3.6.0-M3",
   "org.postgresql" % "postgresql" % "9.3-1102-jdbc41",
-  "io.argonaut" %% "argonaut" % "6.2"
+  "io.circe" %% "circe-parser" % "0.9.3",
+  "io.circe" %% "circe-core" % "0.9.3"
 )
 
 

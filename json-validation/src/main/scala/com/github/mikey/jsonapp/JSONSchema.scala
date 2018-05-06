@@ -4,12 +4,12 @@ import play.api.libs.json._
 import com.github.fge.jsonschema._
 import com.github.fge.jsonschema.main.JsonSchemaFactory
 import com.fasterxml.jackson.databind.JsonNode
-// import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.{Json => JJson, _}
 import java.sql.{Connection, DriverManager, ResultSet}
-import argonaut.{Json => AJson, _}
-import Argonaut._
+import io.circe.{Json => CJson, _}
+import io.circe.parser.{parse => cparse, _}
+import cats.syntax.either._
 
 class JSONSchema(schemaid : String) {
   // Class to hold instances of JSON schemas
@@ -66,10 +66,11 @@ class JSONSchema(schemaid : String) {
   }
 
   def removeNulls(js: String): JsValue = {
-    val prettyParams = PrettyParams.spaces4.copy(preserveOrder = true, dropNullKeys = true)
-    val asJs = js.asJson;
-    val prettified = js.asJson.pretty(prettyParams);
-    return Json.parse(prettified);
+    // Returns an either value, so get the right-value
+    val parsed = cparse(js).right.get
+    val printer = Printer.spaces2.copy(dropNullValues=true)
+    val pr = printer.pretty(parsed);
+    return Json.parse(pr);
   }
 
   def validate(schemaid: String, json: String) : (JsValue, Int) = {
