@@ -12,6 +12,7 @@ class JSONServletTests extends ScalatraFunSuite with BeforeAndAfterAll {
   // Set up database with test data
   override def beforeAll() {
     // The super class needs to be called first
+
     super.beforeAll()
     val con_str = "jdbc:postgresql://localhost:5432/jsonapp?user=postgres"
     val conn = DriverManager.getConnection(con_str)
@@ -19,7 +20,12 @@ class JSONServletTests extends ScalatraFunSuite with BeforeAndAfterAll {
     try {
       val stm = conn.createStatement()
       val c = stm.executeUpdate(s"INSERT INTO jsonschemas VALUES ('config-schema', '$config_schema')");
-    } finally {
+    }
+    catch { 
+      case e:Exception => System.out.println("Already exists in DB");
+    }
+
+    finally {
       conn.close()
     }
   }
