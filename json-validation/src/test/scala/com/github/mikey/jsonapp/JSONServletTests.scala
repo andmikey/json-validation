@@ -56,19 +56,19 @@ class JSONServletTests extends ScalatraFunSuite with BeforeAndAfterAll {
     }
   }
 
-  test("POST valid json to /schema/config-schema should return 200") {
+  test("POST config.json to /schema/config-schema should return 200") {
     post("/validate/config-schema", valid_json_document, Map("Content-Type" -> "application/json")) {
       status should equal (200)
     }
   }
 
-  test("POST invalid json to /schema/config-schema should return 500") {
+  test("POST invalid.json to /schema/config-schema should return 500") {
     post("/validate/config-schema", invalid_json_document, Map("Content-Type" -> "application/json")) {
       status should equal (500)
     }
   }
 
-  test("POST valid json with null to /schema/config-schema should return 200") {
+  test("POST config-no-null.json to /schema/config-schema should return 200") {
     post("/validate/config-schema", valid_with_null_json_document, Map("Content-Type" -> "application/json")) {
       status should equal (200)
     }
