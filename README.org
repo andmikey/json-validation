@@ -51,3 +51,12 @@ To run tests:
 #+BEGIN_SRC sh
 $ sbt test
 #+END_SRC
+
+You can also test it using curl:
+#+BEGIN_SRC sh
+$ cd json-validation/files
+# Upload config-schema.json
+$ curl http://localhost:8080/schema/config-schema -X POST -d @config-schema.json -H "Content-Type: application/json"
+# Verify that config.json validates properly
+$ curl http://localhost:8080/validate/config-schema -X POST -d @config.json -H "Content-Type: application/json"
+#+END_SRC 
