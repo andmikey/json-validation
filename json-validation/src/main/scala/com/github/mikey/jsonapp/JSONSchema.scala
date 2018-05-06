@@ -77,7 +77,15 @@ class JSONSchema(schemaid : String) {
     // Validate a JSON document against the named schema
     System.out.println("Given JSON: " + json)
     // Clean json
-    val no_nulls = removeNulls(json);
+    val no_nulls = try {
+      removeNulls(json);
+    }
+    catch {
+      case e: Exception => return (invalid_validation, 500);
+        System.out.println(e);
+        null
+    }
+
     System.out.println(no_nulls);
     val json_clean = Json.stringify(no_nulls);
 
