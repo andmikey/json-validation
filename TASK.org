@@ -72,15 +72,17 @@ $ CREATE TABLE jsonschemas (schemaid varchar PRIMARY KEY, json varchar);
   - Internal server error: 500
     - [X] Document could not be validated against schema
     - [X] Schema could not be saved to database
-- [ ] Tests:
-  - [ ] Valid schema upload
-  - [ ] Invalid schema upload
-    - [ ] JSON not valid
-    - [ ] Already exists in database
-  - [ ] Successful validation
-  - [ ] Unsuccessful validation
-  - [ ] Successful retrieval
-  - [ ] Unsuccessful retrieval
+- [X] Tests:
+  - [X] Valid schema upload
+  - [X] Invalid schema upload
+    - [X] JSON not valid
+    - [X] Already exists in database
+  - [X] Successful validation
+  - [X] Unsuccessful validation
+  - [X] Successful retrieval
+  - [X] Unsuccessful retrieval
+- Fix JSON handling code
+  - Seems to be behaving weirdly
 ** Resources
 - [[https://stackoverflow.com/questions/671118/what-exactly-is-restful-programming/671132#671123][What is RESTful programming?]]
 - [[https://doc.akka.io/docs/akka-http/current/?language=scala][Akka HTTP]]

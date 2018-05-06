@@ -28,7 +28,7 @@ class JSONServlet extends ScalatraServlet {
 
     // 201 or 500?
     if (code == 201) {
-      Ok(resp);
+      Created(resp);
     }
     else {
       InternalServerError(resp);

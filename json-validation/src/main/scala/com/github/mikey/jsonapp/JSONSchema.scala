@@ -4,10 +4,12 @@ import play.api.libs.json._
 import com.github.fge.jsonschema._
 import com.github.fge.jsonschema.main.JsonSchemaFactory
 import com.fasterxml.jackson.databind.JsonNode
-import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.{Json => JJson, _}
 import java.sql.{Connection, DriverManager, ResultSet}
-
+import io.circe.{Json => CJson, _}
+import io.circe.parser.{parse => cparse, _}
+import cats.syntax.either._
 
 class JSONSchema(schemaid : String) {
   // Class to hold instances of JSON schemas
@@ -63,28 +65,44 @@ class JSONSchema(schemaid : String) {
     }
   }
 
-  private[this] def withoutNull(json: JsValue): JsValue = json match {
-    // https://gist.github.com/d6y/eda9d968e78943e672ce
-    case JsObject(fields) =>
-      JsObject(fields.flatMap {
-        case (_, JsNull)          => None // could match on specific field name here
-        case other @ (name,value) => Some(other) // consider recursing on the value for nested objects
-      })
-    case other => other
+  def removeNulls(js: String): JsValue = {
+    // Returns an either value, so get the right-value
+    val parsed = cparse(js).right.get
+    val printer = Printer.spaces2.copy(dropNullValues=true)
+    val pr = printer.pretty(parsed);
+    return Json.parse(pr);
   }
 
   def validate(schemaid: String, json: String) : (JsValue, Int) = {
     // Validate a JSON document against the named schema
-
+    System.out.println("Given JSON: " + json)
     // Clean json
-    val json_clean = Json.stringify(withoutNull(Json.parse(json)));
+    val no_nulls = try {
+      removeNulls(json);
+    }
+    catch {
+      case e: Exception => return (invalid_validation, 500);
+        System.out.println(e);
+        null
+    }
+
+    System.out.println(no_nulls);
+    val json_clean = Json.stringify(no_nulls);
+
     // Parse schema, supplied json
     val (schemaContents, _) = this.get(schemaid);
     val schema: JsonNode = asJsonNode(parse(Json.stringify(schemaContents)));
     val json_parsed: JsonNode = asJsonNode(parse(json_clean));
 
+    System.out.println("Parsed json: " + json_parsed);
+    System.out.println("Schema: " + schema);
+
+    System.out.println(json_parsed.getClass);
     val validator = JsonSchemaFactory.byDefault().getValidator;
     val processingReport = validator.validate(schema, json_parsed);
+    System.out.println("Processing report: " + json);
+
+    System.out.println(processingReport)
 
     if (processingReport.isSuccess) {
       return (successful_validation, 200);
@@ -105,7 +123,9 @@ class JSONSchema(schemaid : String) {
       val rs = stm.executeQuery(s"SELECT * from jsonschemas where schemaid = '$schemaid'")
       // Move the pointer one along to get first row of results
       rs.next()
-      return rs.getString("json");
+      val result = rs.getString("json");
+      System.out.println("Got schema from database" );
+      return result;
 
     } finally {
       conn.close()
