@@ -4,10 +4,11 @@ import play.api.libs.json._
 import com.github.fge.jsonschema._
 import com.github.fge.jsonschema.main.JsonSchemaFactory
 import com.fasterxml.jackson.databind.JsonNode
-import org.json4s._
+// import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import java.sql.{Connection, DriverManager, ResultSet}
-
+import argonaut.{Json => AJson, _}
+import Argonaut._
 
 class JSONSchema(schemaid : String) {
   // Class to hold instances of JSON schemas
@@ -63,21 +64,20 @@ class JSONSchema(schemaid : String) {
     }
   }
 
-  private[this] def withoutNull(json: JsValue): JsValue = json match {
-    // https://gist.github.com/d6y/eda9d968e78943e672ce
-    case JsObject(fields) =>
-      JsObject(fields.flatMap {
-        case (_, JsNull)          => None // could match on specific field name here
-        case other @ (name,value) => Some(other) // consider recursing on the value for nested objects
-      })
-    case other => other
+  def removeNulls(js: String): String = {
+    val prettyParams = PrettyParams.spaces2.copy(preserveOrder = true, dropNullKeys = true)
+    return js.asJson.pretty(prettyParams);
+  }
+
+  def removeNull(json: JsValue): JsValue =  {
+    return Json.parse(removeNulls(Json.stringify(json)));
   }
 
   def validate(schemaid: String, json: String) : (JsValue, Int) = {
     // Validate a JSON document against the named schema
 
     // Clean json
-    val json_clean = Json.stringify(withoutNull(Json.parse(json)));
+    val json_clean = Json.stringify(removeNull(Json.parse(json)));
     // Parse schema, supplied json
     val (schemaContents, _) = this.get(schemaid);
     val schema: JsonNode = asJsonNode(parse(Json.stringify(schemaContents)));
@@ -85,6 +85,8 @@ class JSONSchema(schemaid : String) {
 
     val validator = JsonSchemaFactory.byDefault().getValidator;
     val processingReport = validator.validate(schema, json_parsed);
+    System.out.println("Processing report for " + json);
+    System.out.println(processingReport)
 
     if (processingReport.isSuccess) {
       return (successful_validation, 200);

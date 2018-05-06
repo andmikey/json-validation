@@ -21,8 +21,11 @@ libraryDependencies ++= Seq(
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.4.0",
   "org.json4s" %% "json4s-jackson" % "3.6.0-M3",
   "org.json4s" %% "json4s-native" % "3.6.0-M3",
-  "org.postgresql" % "postgresql" % "9.3-1102-jdbc41"
+  "org.postgresql" % "postgresql" % "9.3-1102-jdbc41",
+  "io.argonaut" %% "argonaut" % "6.2"
 )
+
+
 
 enablePlugins(SbtTwirl)
 enablePlugins(ScalatraPlugin)
