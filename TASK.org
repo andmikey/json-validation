@@ -81,6 +81,8 @@ $ CREATE TABLE jsonschemas (schemaid varchar PRIMARY KEY, json varchar);
   - [X] Unsuccessful validation
   - [X] Successful retrieval
   - [X] Unsuccessful retrieval
+- Fix JSON handling code
+  - Seems to be behaving weirdly
 ** Resources
 - [[https://stackoverflow.com/questions/671118/what-exactly-is-restful-programming/671132#671123][What is RESTful programming?]]
 - [[https://doc.akka.io/docs/akka-http/current/?language=scala][Akka HTTP]]
