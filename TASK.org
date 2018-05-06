@@ -72,11 +72,11 @@ $ CREATE TABLE jsonschemas (schemaid varchar PRIMARY KEY, json varchar);
   - Internal server error: 500
     - [X] Document could not be validated against schema
     - [X] Schema could not be saved to database
-- [-] Tests:
-  - [ ] Valid schema upload
-  - [ ] Invalid schema upload
-    - [ ] JSON not valid
-    - [ ] Already exists in database
+- [X] Tests:
+  - [X] Valid schema upload
+  - [X] Invalid schema upload
+    - [X] JSON not valid
+    - [X] Already exists in database
   - [X] Successful validation
   - [X] Unsuccessful validation
   - [X] Successful retrieval
