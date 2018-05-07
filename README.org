@@ -33,7 +33,7 @@ The `JSONSchema` object has the following publicly-accessible methods:
 | validate | Validate a JSON Document against a JSON Schema       |
 
 ** Building and running
-The database need to be a PostgreSQL instance running on port 5432, as standard. To set up the required database and tables:
+The database needs to be a PostgreSQL instance running on port 5432, as standard. To set up the required database and tables:
 #+BEGIN_SRC sh
 $ psql -U postgres -c "CREATE DATABASE jsonapp WITH OWNER = postgres;"
 $ psql -U postgres -d jsonapp -c "CREATE TABLE jsonschemas(schemaid varchar PRIMARY KEY, json varchar);"
@@ -53,11 +53,11 @@ $ sbt test
 #+END_SRC
 Note that running tests will delete any existing rows with primary key "config-schema" and "config-schema2". 
 
-You can also test it using curl:
+You can also test the appusing curl:
 #+BEGIN_SRC sh
 $ cd json-validation/files
-# Upload config-schema.json
+# Upload config-schema.json - should return success
 $ curl http://localhost:8080/schema/config-schema -X POST -d @config-schema.json -H "Content-Type: application/json"
-# Verify that config.json validates properly
+# Verify that config.json validates properly - should return success
 $ curl http://localhost:8080/validate/config-schema -X POST -d @config.json -H "Content-Type: application/json"
 #+END_SRC 
