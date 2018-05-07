@@ -23,7 +23,7 @@ class JSONServlet extends ScalatraServlet {
     val schemaid = params("schemaid");
     val jsonSchema = request.body;
 
-    val s = new JSONSchema(schemaid);
+    val s = new JSONSchema();
     val (resp, code) = s.add(schemaid, jsonSchema);
 
     // 201 or 500?
@@ -39,7 +39,7 @@ class JSONServlet extends ScalatraServlet {
     // Retrieve JSON schema with schemaid from database
     val schemaid = params("schemaid");
 
-    val s = new JSONSchema(schemaid);
+    val s = new JSONSchema();
     val (resp, code) = s.get(schemaid);
 
     // 200 or 404?
@@ -56,7 +56,7 @@ class JSONServlet extends ScalatraServlet {
     val schemaid = params("schemaid");
     val jsonDocument = request.body;
 
-    val s = new JSONSchema(schemaid);
+    val s = new JSONSchema();
     val (resp, code) = s.validate(schemaid, jsonDocument);
 
     // 200 or 500?
