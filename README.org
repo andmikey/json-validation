@@ -53,7 +53,7 @@ $ sbt test
 #+END_SRC
 Note that running tests will delete any existing rows with primary key "config-schema" and "config-schema2". 
 
-You can also test the appusing curl:
+You can also test the app using curl:
 #+BEGIN_SRC sh
 $ cd json-validation/files
 # Upload config-schema.json - should return success
