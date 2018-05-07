@@ -9,7 +9,6 @@ import org.json4s.jackson.{Json => JJson, _}
 import java.sql.{Connection, DriverManager, ResultSet}
 import io.circe.{Json => CJson, _}
 import io.circe.parser.{parse => cparse, _}
-import cats.syntax.either._
 
 class JSONSchema {
   // Class to hold instances of JSON schemas
