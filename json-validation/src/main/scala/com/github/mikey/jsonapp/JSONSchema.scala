@@ -9,23 +9,20 @@ import org.json4s.jackson.{Json => JJson, _}
 import java.sql.{Connection, DriverManager, ResultSet}
 import io.circe.{Json => CJson, _}
 import io.circe.parser.{parse => cparse, _}
-import cats.syntax.either._
 
-class JSONSchema(schemaid : String) {
+class JSONSchema {
   // Class to hold instances of JSON schemas
 
-  val successful_upload = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
-    "status" -> "success"));
-  val invalid_upload = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
-    "status" -> "error", "message" -> "Invalid JSON"));
-  val db_save_issue = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
-    "status" -> "error", "message" -> "Cannot save to database; perhaps the item already exists?"));
-  val db_load_issue = (Json.obj("action" -> "uploadSchema", "id" -> schemaid,
-    "status" -> "error", "message" -> "Cannot fetch from database; perhaps the item doesn't exist?"));
-  val successful_validation = (Json.obj("action" -> "validateDocument", "id" -> schemaid,
-    "status" -> "success"));
-  val invalid_validation = (Json.obj("action" -> "validateDocument", "id" -> schemaid,
-    "status" -> "error", "message" -> "Could not validate JSON document against given schema"));
+  private[this] def resp(action: String, id: String, status: String, message: String) : JsValue= {
+    // Generates a response to a request
+    if (message == "") {
+      return Json.obj("action" -> action, "id" -> id, "status" -> status);
+    }
+
+    else {
+      return Json.obj("action" -> action, "id" -> id, "status" -> status, "message" -> message);
+    }
+  }
 
   def add(schemaid: String, schema: String): (JsValue, Int) = {
     // Add a schema to the database if not already in database
@@ -37,7 +34,7 @@ class JSONSchema(schemaid : String) {
       }
       catch {
         // Cannot parse - invalid JSON, return invalid response
-        case e: Exception => return (invalid_upload, 500);
+        case e: Exception => return (resp("uploadSchema", schemaid, "error", "Invalid JSON"), 500);
           null
       }
 
@@ -46,11 +43,12 @@ class JSONSchema(schemaid : String) {
       this.insertDB(schemaid, schema);
     }
     catch {
-      case e: Exception => return (db_save_issue, 500);
+      // Cannot save to database
+      case e: Exception => return (resp("uploadSchema", schemaid, "error", "Could not save to database"), 500);
         System.out.println(e);
         null
     }
-    return (successful_upload, 201);
+    return (resp("uploadSchema", schemaid, "success", ""), 201);
   }
 
   def get(schemaid: String): (JsValue, Int) = {
@@ -59,7 +57,8 @@ class JSONSchema(schemaid : String) {
       return (Json.parse(this.queryDB(schemaid)), 200);
     }
     catch {
-      case e: Exception => return (db_load_issue, 404);
+      // Couldn't load from database - probably doesn't exist
+      case e: Exception => return (resp("fetchSchema", schemaid, "error", "Could not load schema from database"), 404);
         System.out.println(e);
         null
     }
@@ -81,7 +80,7 @@ class JSONSchema(schemaid : String) {
       removeNulls(json);
     }
     catch {
-      case e: Exception => return (invalid_validation, 500);
+      case e: Exception => return (resp("validateDocument", schemaid, "error", "Trying to validate invalid JSON"), 500);
         System.out.println(e);
         null
     }
@@ -105,10 +104,13 @@ class JSONSchema(schemaid : String) {
     System.out.println(processingReport)
 
     if (processingReport.isSuccess) {
-      return (successful_validation, 200);
+      return (resp("validateDocument", schemaid, "success", ""), 200);
     }
 
-    return (invalid_validation, 500);
+    // Return the processing error message
+    val itr = processingReport.iterator()
+    val message = itr.next()
+    return (resp("validateDocument", schemaid, "error", message.asJson().get("reports").asText()), 500);
   }
 
   private[this] def queryDB(schemaid: String) : String = {

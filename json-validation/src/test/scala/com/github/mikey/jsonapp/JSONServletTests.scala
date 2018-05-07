@@ -91,7 +91,6 @@ class JSONServletTests extends ScalatraFunSuite with BeforeAndAfterAll {
     }
   }
 
-
   val dir = System.getProperty("user.dir")
   val config_schema = Source.fromFile(dir + "/files/config-schema.json").getLines.mkString
   val valid_json_document = Source.fromFile(dir + "/files/config.json").getLines.mkString
